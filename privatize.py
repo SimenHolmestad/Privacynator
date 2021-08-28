@@ -1,6 +1,7 @@
 import sys
 import os
 import argparse
+from video_operations.reject_frames_with_pii import reject_frames_with_pii
 import cv2
 
 
@@ -33,15 +34,6 @@ def do_operation_on_video(input_video, output_video, video_operation, limit_to_f
             break
 
         video_operation(image, output_video)
-
-
-def reject_frames_with_pii(image, output_video):
-    if image_does_not_contain_pii(image):
-        output_video.write(image)
-
-
-def image_does_not_contain_pii(image):
-    return True
 
 
 def get_number_of_frames_to_process(input_video, limit_to_frame):
