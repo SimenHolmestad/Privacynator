@@ -1,41 +1,36 @@
 import sys
 import os
 import argparse
-import torch
-import torchvision.io
+import cv2
 
 
 def main():
     args = parse_command_line_args()
-    print("Privatizing file \"{}\" to \"{}\"".format(args.input_file, args.output_file))
+    cap = cv2.VideoCapture(args.input_file)
 
-    print("\nLoading file", args.input_file)
-    reader = torchvision.io.VideoReader(args.input_file, "video")
+    fourcc = cv2.VideoWriter_fourcc(*'MP4V')
+    out = cv2.VideoWriter(args.output_file, fourcc, 20.0, (1920, 1080))
 
-    valid_frames = []
-
-    for frame_number, frame in enumerate(reader):
-        image = frame["data"]
-
-        if is_valid_image(image):
-            valid_frames.append(convert_image_to_single_movie_frame(image))
-
-        if args.limit_frames and frame_number >= args.limit_frames:
+    frame_count = 0
+    while(cap.isOpened()):
+        ret, image = cap.read()
+        if ret is False:
             break
 
-    output_frames = torch.cat(valid_frames, dim=0)
-    torchvision.io.write_video(args.output_file, output_frames, fps=24)
+        if is_valid_image(image):
+            out.write(image)
+
+        frame_count += 1
+        if args.limit_frames and frame_count >= args.limit_frames:
+            break
+
+    cap.release()
+    out.release()
+    cv2.destroyAllWindows()
 
 
 def is_valid_image(frame):
     return True
-
-
-def convert_image_to_single_movie_frame(image):
-    hwc_image = torch.moveaxis(image, 0, 2)
-    shape = hwc_image.shape
-    new_shape = (1, shape[0], shape[1], shape[2])
-    return hwc_image.reshape(new_shape)
 
 
 def parse_command_line_args():
