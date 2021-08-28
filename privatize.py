@@ -6,31 +6,45 @@ import cv2
 
 def main():
     args = parse_command_line_args()
-    cap = cv2.VideoCapture(args.input_file)
+    convert_video_file(
+        args.input_file,
+        args.output_file,
+        args.limit_to_frame
+    )
 
-    fourcc = cv2.VideoWriter_fourcc(*'MP4V')
-    out = cv2.VideoWriter(args.output_file, fourcc, 20.0, (1920, 1080))
+
+def convert_video_file(input_filename, output_filename, limit_to_frame=None):
+    input_video = cv2.VideoCapture(input_filename)
+    output_video = create_output_video(input_video, output_filename)
 
     frame_count = 0
-    while(cap.isOpened()):
-        ret, image = cap.read()
+    while(input_video.isOpened()):
+        ret, image = input_video.read()
         if ret is False:
             break
 
         if is_valid_image(image):
-            out.write(image)
+            output_video.write(image)
 
         frame_count += 1
-        if args.limit_frames and frame_count >= args.limit_frames:
+        if limit_to_frame and frame_count >= limit_to_frame:
             break
 
-    cap.release()
-    out.release()
-    cv2.destroyAllWindows()
+    input_video.release()
+    output_video.release()
 
 
 def is_valid_image(frame):
     return True
+
+
+def create_output_video(input_video, output_filename):
+    fourcc = cv2.VideoWriter_fourcc(*'MP4V')
+    fps = input_video.get(cv2.CAP_PROP_FPS)
+    width = input_video.get(cv2.CAP_PROP_FRAME_WIDTH)
+    height = input_video.get(cv2.CAP_PROP_FRAME_HEIGHT)
+    framesize = (int(width), int(height))
+    return cv2.VideoWriter(output_filename, fourcc, fps, framesize)
 
 
 def parse_command_line_args():
@@ -42,8 +56,8 @@ def parse_command_line_args():
     parser.add_argument("-o", "--overwrite_output_file",
                         action="store_true",
                         help="Overwrite output file if it exists")
-    parser.add_argument("-l", "--limit_frames", type=int,
-                        help="Limit to specified amount of frames")
+    parser.add_argument("-l", "--limit_to_frame", type=int,
+                        help="Limit conversion to specified amount of frames from start of input video")
 
     args = parser.parse_args()
 
