@@ -17,25 +17,38 @@ def convert_video_file(input_filename, output_filename, limit_to_frame=None):
     input_video = cv2.VideoCapture(input_filename)
     output_video = create_output_video(input_video, output_filename)
 
-    frame_count = 0
-    while(input_video.isOpened()):
-        ret, image = input_video.read()
-        if ret is False:
-            break
-
-        if is_valid_image(image):
-            output_video.write(image)
-
-        frame_count += 1
-        if limit_to_frame and frame_count >= limit_to_frame:
-            break
+    video_operation = reject_frames_with_pii
+    do_operation_on_video(input_video, output_video, video_operation, limit_to_frame)
 
     input_video.release()
     output_video.release()
 
 
-def is_valid_image(frame):
+def do_operation_on_video(input_video, output_video, video_operation, limit_to_frame=None):
+    num_frames_to_process = get_number_of_frames_to_process(input_video, limit_to_frame)
+
+    for frame_number in range(num_frames_to_process):
+        ret, image = input_video.read()
+        if ret is False:
+            break
+
+        video_operation(image, output_video)
+
+
+def reject_frames_with_pii(image, output_video):
+    if image_does_not_contain_pii(image):
+        output_video.write(image)
+
+
+def image_does_not_contain_pii(image):
     return True
+
+
+def get_number_of_frames_to_process(input_video, limit_to_frame):
+    num_frames_in_video = int(input_video.get(cv2.CAP_PROP_FRAME_COUNT))
+    if limit_to_frame and limit_to_frame < num_frames_in_video:
+        return limit_to_frame
+    return num_frames_in_video
 
 
 def create_output_video(input_video, output_filename):
