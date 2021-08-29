@@ -1,9 +1,10 @@
 import sys
 import os
 import argparse
-from video_operations.reject_frames_with_pii import reject_frames_with_pii
 import cv2
 from tqdm import tqdm
+from video_operations.reject_frames_with_pii import RejectFramesWithPii
+from video_operations.detectron2_coco_demo import Detectron2CocoDemo
 
 
 def main():
@@ -21,7 +22,8 @@ def convert_video_file(input_filename, output_filename, start_from_frame, limit_
     input_video.set(cv2.CAP_PROP_POS_FRAMES, start_from_frame)
     output_video = create_output_video(input_video, output_filename)
 
-    video_operation = reject_frames_with_pii
+    video_operation = RejectFramesWithPii()
+    video_operation = Detectron2CocoDemo()
     do_operation_on_video(input_video, output_video, video_operation, limit_to_frame)
 
     input_video.release()
@@ -36,7 +38,7 @@ def do_operation_on_video(input_video, output_video, video_operation, limit_to_f
         if ret is False:
             break
 
-        video_operation(image, output_video)
+        video_operation.do_operation(image, output_video)
 
 
 def get_number_of_frames_to_process(input_video, limit_to_frame):
