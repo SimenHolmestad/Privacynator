@@ -3,13 +3,13 @@ import os
 import argparse
 import cv2
 from tqdm import tqdm
-from video_operations.reject_frames_with_pii import RejectFramesWithPii
-from video_operations.detectron2_coco_demo import Detectron2CocoDemo
+from video_operation_options import get_video_operation_names, get_video_operation_instance_by_name
 
 
 def main():
     args = parse_command_line_args()
     convert_video_file(
+        args.video_operation,
         args.input_file,
         args.output_file,
         args.start_from_frame,
@@ -17,13 +17,12 @@ def main():
     )
 
 
-def convert_video_file(input_filename, output_filename, start_from_frame, limit_to_frame=None):
+def convert_video_file(video_operation_name, input_filename, output_filename, start_from_frame, limit_to_frame=None):
     input_video = cv2.VideoCapture(input_filename)
     input_video.set(cv2.CAP_PROP_POS_FRAMES, start_from_frame)
     output_video = create_output_video(input_video, output_filename)
 
-    video_operation = RejectFramesWithPii()
-    video_operation = Detectron2CocoDemo()
+    video_operation = get_video_operation_instance_by_name(video_operation_name)
     do_operation_on_video(input_video, output_video, video_operation, limit_to_frame)
 
     input_video.release()
@@ -59,6 +58,8 @@ def create_output_video(input_video, output_filename):
 
 def parse_command_line_args():
     parser = argparse.ArgumentParser()
+    parser.add_argument("video_operation", choices=get_video_operation_names(),
+                        help="The video operation to be performed on the video")
     parser.add_argument("input_file",
                         help="Path to video to be converted using privatize")
     parser.add_argument("output_file",
