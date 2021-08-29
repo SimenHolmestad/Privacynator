@@ -10,12 +10,14 @@ def main():
     convert_video_file(
         args.input_file,
         args.output_file,
+        args.start_from_frame,
         args.limit_to_frame
     )
 
 
-def convert_video_file(input_filename, output_filename, limit_to_frame=None):
+def convert_video_file(input_filename, output_filename, start_from_frame, limit_to_frame=None):
     input_video = cv2.VideoCapture(input_filename)
+    input_video.set(cv2.CAP_PROP_POS_FRAMES, start_from_frame)
     output_video = create_output_video(input_video, output_filename)
 
     video_operation = reject_frames_with_pii
@@ -29,6 +31,7 @@ def do_operation_on_video(input_video, output_video, video_operation, limit_to_f
     num_frames_to_process = get_number_of_frames_to_process(input_video, limit_to_frame)
 
     for frame_number in range(num_frames_to_process):
+        print("Processing frame", frame_number + 1)
         ret, image = input_video.read()
         if ret is False:
             break
@@ -63,6 +66,8 @@ def parse_command_line_args():
                         help="Overwrite output file if it exists")
     parser.add_argument("-l", "--limit_to_frame", type=int,
                         help="Limit conversion to specified amount of frames from start of input video")
+    parser.add_argument("-s", "--start_from_frame", type=int, default=0,
+                        help="Start conversion from specified frame in input video (0-indexed)")
 
     args = parser.parse_args()
 
