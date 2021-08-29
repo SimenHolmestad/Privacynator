@@ -3,6 +3,7 @@ import os
 import argparse
 from video_operations.reject_frames_with_pii import reject_frames_with_pii
 import cv2
+from tqdm import tqdm
 
 
 def main():
@@ -30,8 +31,7 @@ def convert_video_file(input_filename, output_filename, start_from_frame, limit_
 def do_operation_on_video(input_video, output_video, video_operation, limit_to_frame=None):
     num_frames_to_process = get_number_of_frames_to_process(input_video, limit_to_frame)
 
-    for frame_number in range(num_frames_to_process):
-        print("Processing frame", frame_number + 1)
+    for frame_number in tqdm(range(num_frames_to_process)):
         ret, image = input_video.read()
         if ret is False:
             break
