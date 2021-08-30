@@ -1,9 +1,11 @@
 from video_operations.reject_frames_with_pii import RejectFramesWithPii
 from video_operations.detectron2_coco_demo import Detectron2CocoDemo
+from video_operations.mask import Mask
 
 video_operation_options = {
     "reject_frames": RejectFramesWithPii,
-    "demo": Detectron2CocoDemo
+    "demo": Detectron2CocoDemo,
+    "mask": Mask,
 }
 
 
