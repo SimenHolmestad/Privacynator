@@ -29,13 +29,11 @@ Rejects frames from the input video containing PII. This means your output video
 ## Mask
 Create black masks over regions containing PII in the video.
 
+## Blur
+Blur areas containing PII in the video.
+
 ## Demo
 Does a semantic segmentation on every frame using Detectron2 and outputs a visualisation of the classes. This is sometimes nice for debugging.
-
-## Planned video operations
-In the future, the following video operations are planned to be implemented:
-
-- Blur: Blur the areas containing PII based on the output of Detectron2.
 
 ## Adding a new video operation
 A video operation is a fairly simple thing. It takes an image as input and ouputs 0, 1 or more images to an output based on the content of the input image.
