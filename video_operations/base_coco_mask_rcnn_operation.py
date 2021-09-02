@@ -6,9 +6,9 @@ from detectron2.config import get_cfg
 
 
 class BaseCocoMaskRcnnOperation(BaseVideoOperation, ABC):
-    def __init__(self):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
         self.initialize_detectron2_model()
-        self.coco_classes = [2, 7]
 
     def initialize_detectron2_model(self):
         self.cfg = get_cfg()

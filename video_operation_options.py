@@ -20,8 +20,8 @@ def get_video_operation_names():
     return list(video_operation_options.keys())
 
 
-def get_video_operation_instance_by_name(name):
+def get_video_operation_class_by_name(name):
     if name not in get_video_operation_names():
         raise VideoOperationNotFoundError()
 
-    return video_operation_options[name]()
+    return video_operation_options[name]

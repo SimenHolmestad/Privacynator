@@ -10,6 +10,8 @@ class Blur(BaseCocoMaskRcnnOperation):
 
     def blur_coco_instances(self, image):
         masks_with_coco_classes = self.get_coco_masks_for_image(image)
+        if len(masks_with_coco_classes) == 0:
+            return image
         combined_masks = self.combine_masks(masks_with_coco_classes)
         return self.blur_masked_parts_of_image(image, combined_masks)
 

@@ -19,6 +19,14 @@ Your command would be
 python3 privatize.py -o -s 68 -l 419 <video-operation> <input-file-path> <output-file-path>
 ```
 
+It is also possible to use different Coco classes (`-c`) for the application. So if you for some reason would like to blur all frisbees and giraffes in your video, you can run the command:
+
+``` sh
+python3 privatize.py blur <input-file-path> <output-file-path> -c 33 24
+```
+
+A list of all the Coco classes can be found by following [this link](https://tech.amikelive.com/node-718/what-object-categories-labels-are-in-coco-dataset/). **Note:** The Coco class numbers in the link are one-indexed, while the input Coco class numbers to privatize to be 0-indexed.
+
 # Video operations
 There are several possible techniques to remove PII from a video, and Privacynator supports some of them. The available methods are each implemented as its own "video operation".
 

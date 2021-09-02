@@ -3,7 +3,7 @@ import os
 import argparse
 import cv2
 from tqdm import tqdm
-from video_operation_options import get_video_operation_names, get_video_operation_instance_by_name
+from video_operation_options import get_video_operation_names, get_video_operation_class_by_name
 
 
 def main():
@@ -13,16 +13,18 @@ def main():
         args.input_file,
         args.output_file,
         args.start_from_frame,
+        args.coco_classes,
         args.limit_to_frame
     )
 
 
-def convert_video_file(video_operation_name, input_filename, output_filename, start_from_frame, limit_to_frame=None):
+def convert_video_file(video_operation_name, input_filename, output_filename, start_from_frame, coco_classes, limit_to_frame=None):
     input_video = cv2.VideoCapture(input_filename)
     input_video.set(cv2.CAP_PROP_POS_FRAMES, start_from_frame)
     output_video = create_output_video(input_video, output_filename)
 
-    video_operation = get_video_operation_instance_by_name(video_operation_name)
+    VideoOperationClass = get_video_operation_class_by_name(video_operation_name)
+    video_operation = VideoOperationClass(coco_classes)
     do_operation_on_video(input_video, output_video, video_operation, limit_to_frame)
 
     input_video.release()
@@ -71,6 +73,8 @@ def parse_command_line_args():
                         help="Limit conversion to specified amount of frames from start of input video")
     parser.add_argument("-s", "--start_from_frame", type=int, default=0,
                         help="Start conversion from specified frame in input video (0-indexed)")
+    parser.add_argument("-c", "--coco_classes", type=int, nargs='+', default=[0, 2, 7],
+                        help="Coco classes to use when applying video operation")
 
     args = parser.parse_args()
 
