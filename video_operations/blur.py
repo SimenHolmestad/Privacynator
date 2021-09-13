@@ -25,7 +25,7 @@ class Blur(BaseCocoMaskRcnnOperation):
         return np.uint8(image_with_masked_parts_removed + blurred_masked_parts_of_image)
 
     def convert_mask_to_right_format(self, mask):
-        numpy_mask = mask.numpy()
+        numpy_mask = mask.cpu().numpy()
         width, height = numpy_mask.shape
         return numpy_mask.reshape((width, height, 1))
 
