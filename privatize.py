@@ -73,7 +73,7 @@ def parse_command_line_args():
                         help="Limit conversion to specified amount of frames from start of input video")
     parser.add_argument("-s", "--start_from_frame", type=int, default=0,
                         help="Start conversion from specified frame in input video (0-indexed)")
-    parser.add_argument("-c", "--coco_classes", type=int, nargs='+', default=[0, 2, 7],
+    parser.add_argument("-c", "--coco_classes", type=int, nargs='+', default=[0, 1, 2, 3, 5, 7, 17, 26],
                         help="Coco classes to use when applying video operation")
 
     args = parser.parse_args()
