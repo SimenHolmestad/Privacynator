@@ -13,5 +13,5 @@ class Detectron2CocoDemo(BaseCocoMaskRcnnOperation):
 
     def draw_model_outputs_on_image(self, image, outputs):
         v = Visualizer(image[:, :, ::-1], MetadataCatalog.get(self.cfg.DATASETS.TRAIN[0]))
-        out = v.draw_instance_predictions(outputs["instances"])
+        out = v.draw_instance_predictions(outputs["instances"].to("cpu"))
         return out.get_image()[:, :, ::-1]
