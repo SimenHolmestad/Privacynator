@@ -1,7 +1,7 @@
 # Privacynator
 Privacynator is an utility for removing Personally Identifiable Information (PII) from videos. It is primarily meant for videos captured from cars.
 
-Privacynator uses the Detectron2 model from facebook research (<https://github.com/facebookresearch/detectron2>).
+Privacynator uses the Detectron2 model from facebook research: <https://github.com/facebookresearch/detectron2>.
 
 # Installation
 The installation process is not completely straight forward as it depends on the CUDA version of your system.
@@ -19,7 +19,7 @@ source ./venv/bin/activate
 ## Installing the correct dependencies
 First, install Torch and Torchvision by following the instructions at <https://pytorch.org/>, making sure that your version of CUDA is supported.
 
-Then, install Detectron2 by following instructions at <https://detectron2.readthedocs.io/en/latest/tutorials/install.html>. **NOTE:**: The Detectron2 version must match the PyTorch version!
+Then, install Detectron2 by following instructions at <https://detectron2.readthedocs.io/en/latest/tutorials/install.html>. **NOTE**: The Detectron2 version must match the PyTorch version!
 
 Finally, install the rest of the dependencies by doing
 ``` sh
