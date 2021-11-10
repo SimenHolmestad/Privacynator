@@ -4,7 +4,7 @@ from video_operations.mask import Mask
 from video_operations.blur import Blur
 
 video_operation_options = {
-    "reject_frames": RejectFramesWithPii,
+    "reject": RejectFramesWithPii,
     "demo": Detectron2CocoDemo,
     "mask": Mask,
     "blur": Blur,
